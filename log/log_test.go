@@ -47,9 +47,3 @@ func TestISO3339BufLogger(t *testing.T) {
 		fmt.Printf(log)
 	}
 }
-
-func TestTermLogger(t *testing.T) {
-	InitLogger(Debug)
-	defer CloseLogger()
-	Fatalf("good boy")
-}
