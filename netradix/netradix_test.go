@@ -4,7 +4,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/zdnscloud/cement/slice"
+	"github.com/ben-han-cn/cement/slice"
 	ut "github.com/ben-han-cn/cement/unittest"
 )
 
