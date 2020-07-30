@@ -1,9 +1,10 @@
 package domaintree
 
 import (
+	"testing"
+
 	ut "github.com/ben-han-cn/cement/unittest"
 	"github.com/ben-han-cn/g53"
-	"testing"
 )
 
 func stringToName(n string) *g53.Name {
@@ -19,9 +20,7 @@ func TestDomainTree(t *testing.T) {
 
 	sum := 0
 	tree.ForEach(func(d interface{}) {
-		if d != nil {
-			sum += d.(int)
-		}
+		sum += d.(int)
 	})
 	ut.Equal(t, sum, 6)
 

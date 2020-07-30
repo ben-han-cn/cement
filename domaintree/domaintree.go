@@ -132,7 +132,12 @@ func (t *DomainTree) Delete(name *g53.Name) error {
 }
 
 func (t *DomainTree) ForEach(f func(interface{})) {
+	t.lock.RLock()
+	defer t.lock.RUnlock()
+
 	t.nodes.ForEach(func(n *dt.Node) {
-		f(n.Data())
+		if data := n.Data(); data != nil {
+			f(data)
+		}
 	})
 }
