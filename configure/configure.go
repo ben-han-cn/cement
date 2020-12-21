@@ -2,6 +2,7 @@ package configure
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"reflect"
 
@@ -9,7 +10,6 @@ import (
 )
 
 var ErrConfigureObjectIsNotStruct = errors.New("configure object isn't struct")
-var ErrRequiredFieldIsEmpty = errors.New("required filed hasn't been set")
 
 func Load(config interface{}, file string) error {
 	if err := processFile(config, file); err != nil {
@@ -61,7 +61,8 @@ func processTags(config interface{}) error {
 						return err
 					}
 				} else if fieldType.Tag.Get("required") == "true" {
-					return ErrRequiredFieldIsEmpty
+					return fmt.Errorf("required filed %s hasn't been set or set as required but with zero value",
+						fieldType.Name)
 				}
 			}
 		}

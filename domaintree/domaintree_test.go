@@ -15,8 +15,14 @@ func stringToName(n string) *g53.Name {
 func TestDomainTree(t *testing.T) {
 	tree := NewDomainTree()
 	tree.Insert(stringToName("a.b.cn."), 1)
-	tree.Insert(stringToName("com."), 2)
+	tree.Insert(stringToName("com."), 4)
 	tree.Insert(stringToName("b.cn."), 3)
+
+	//duplicate
+	ut.Assert(t, tree.Insert(stringToName("com."), 2) != nil, "")
+	old, err := tree.InsertOrReplace(stringToName("com."), 2)
+	ut.Equal(t, old.(int), 4)
+	ut.Assert(t, err == nil, "")
 
 	sum := 0
 	tree.ForEach(func(d interface{}) {

@@ -107,7 +107,24 @@ func (t *DomainTree) SearchParents(name *g53.Name) (*dt.NodeChain, SearchResult)
 	}
 }
 
-func (t *DomainTree) Insert(name *g53.Name, data interface{}) (*dt.Node, error) {
+func (t *DomainTree) Insert(name *g53.Name, data interface{}) error {
+	if data == nil {
+		return ErrInsertNilValue
+	}
+
+	t.lock.Lock()
+	defer t.lock.Unlock()
+
+	node, err := t.nodes.Insert(name)
+	if err != nil {
+		return err
+	} else {
+		node.SetData(data)
+		return nil
+	}
+}
+
+func (t *DomainTree) InsertOrReplace(name *g53.Name, data interface{}) (interface{}, error) {
 	if data == nil {
 		return nil, ErrInsertNilValue
 	}
@@ -116,11 +133,12 @@ func (t *DomainTree) Insert(name *g53.Name, data interface{}) (*dt.Node, error) 
 	defer t.lock.Unlock()
 
 	node, err := t.nodes.Insert(name)
-	if err != nil && err != dt.ErrAlreadyExist {
-		return nil, err
-	} else {
+	if node != nil {
+		old := node.Data()
 		node.SetData(data)
-		return node, nil
+		return old, nil
+	} else {
+		return nil, err
 	}
 }
 
